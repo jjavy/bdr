@@ -1,0 +1,25 @@
+## Instrucciones 📚 
+> 1. _[1 punto]_ Crear un repositorio público de Github
+> 2. _[1 punto]_ Compartir el repositorio en el Teams correspondiente (o Drive, mientras haya Teams)
+> 3. _[6 puntos]_ Describir una base de datos y sus relaciones de manera no estructurada (puede ser un párrafo, lista, esquema...) con la que trabajar durante el tetramestre. Agrega el tipo de dato que supones tendrá cada uno de tus atributos.
+> 4. _[1 punto]_ Investigar diferentes SGBD, elegir alguno y describirlo. Citar adecuadamente. Plagio invalida tarea.
+> 5. _[1 punto]_ Subir esta descripción en un archivo markdown o PDF nombrado claramente (tarea 1 o algo por el estilo).
+
+
+***
+
+Los puntos `1` y `2` no requieren mayor desarrollo.
+
+## 3. Describir una base de datos y sus relaciones...
+Se requiere una base de datos para un micro-sistema de gestión de **vuelos** para una aerolínea.
+Es necesario que cada **_vuelo_** tenga una `[fecha y hora] tanto programadas como estimadas`, debe tener [asociados] los `aeropuertos de llegada y salida`, así como sus respectivos `aeropuertos alternos`; además cada vuelo debe tener [asociada] una `tripulación`. Es importante también indicar el [número] de `pasajeros` hay anotados para ese vuelo. Adicionalmente, se debe mencionar la `[fecha y hora] reales de salida y llegada`, así como el `estatus` del vuelo, ya sea ["_programado_", "_en transito_", "_completado_" o "_cancelado_"]
+
+Así mismo, cada **_aeropuerto_** debe mencionar `si [es o no] operativo las 24h`, o en caso de no serlo, mencionar sus `[horas] de operación`, así como un [texto] con el `contacto` del mismo.
+
+De igual forma, la **_aeronave_** debe indicar un [número] con la `capacidad` máxima de pasajeros, el [texto] de la `matricula` y el [texto] del `modelo`.
+
+Además, se requiere conocer el [texto] del `puesto`, `nombre` y `contacto` de cada miembro de la **_tripulación_**, así como mencionar en un [texto] el `modelos de aeronaves están capacitados` y además indicar el [número] de `horas de vuelo`.
+
+***
+
+Puntos 4 y 5 por solicitud en la descripción de la tarea, se llevan a cabo fuera de esta página. Sin embargo puedes revisarlo en el siguiente [gist](https://gist.github.com/jjavy/0a9fb32dcca8d7a682367731d4e78243).
