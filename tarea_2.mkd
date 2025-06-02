@@ -1,0 +1,6 @@
+# Instrucciones 📚
+> 1. Convierte tu base de datos no estructurada en un modelo entidad-relación, representándolo con un diagrama entidad-relación. Usa nodos configuras correctas y aristas claramente señaladas con los números correspondientes para las relaciones.
+> 2. Muestra el dominio de los atributos.
+> 3. Subir esta descripción en un archivo markdown o PDF nombrado claramente.
+
+# Modelo ER
