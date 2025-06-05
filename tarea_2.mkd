@@ -4,3 +4,4 @@
 > 3. Subir esta descripción en un archivo markdown o PDF nombrado claramente.
 
 # Modelo ER
+![Diagrama ER de base de datos (pata de gallo)](https://github.com/user-attachments/assets/48490caf-feb4-4b83-842b-2e8e8706b24a)
