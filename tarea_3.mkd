@@ -1,0 +1,5 @@
+# Instrucciones 📚
+> Crea un esquema del modelo relacional de tu base de datos a partir del model e-r de la tarea anterior.
+> Representa con un diagrama relacional tu esquema del punto anterior.
+> Encuentra cuatro operaciones que vayas a usar en tu base de datos y exprésalas mediante operadores del álgebra relacional. Explica con tus propias palabras cada una de las operaciones
+
