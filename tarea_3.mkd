@@ -1,5 +1,14 @@
 # Instrucciones 📚
-> Crea un esquema del modelo relacional de tu base de datos a partir del model e-r de la tarea anterior.
-> Representa con un diagrama relacional tu esquema del punto anterior.
-> Encuentra cuatro operaciones que vayas a usar en tu base de datos y exprésalas mediante operadores del álgebra relacional. Explica con tus propias palabras cada una de las operaciones
+> * Crea un esquema del modelo relacional de tu base de datos a partir del model e-r de la tarea anterior.
+> * Representa con un diagrama relacional tu esquema del punto anterior.
+> * Encuentra cuatro operaciones que vayas a usar en tu base de datos y exprésalas mediante operadores del álgebra relacional. Explica con tus propias palabras cada una de las operaciones
 
+## Diagrama relacional
+![imagen](https://github.com/user-attachments/assets/c9fbf596-ae03-4f68-8d72-4892b7d57bf8)
+> ### Nomenclatura
+> <img width="29" alt="Captura de pantalla 2025-06-12 a la(s) 16 09 51" src="https://github.com/user-attachments/assets/d01058b6-eda1-4b91-844d-2231ca77034b" />
+> Llave Primaria (PK)
+> <img width="29" alt="Captura de pantalla 2025-06-12 a la(s) 16 10 57" src="https://github.com/user-attachments/assets/85f1051e-0654-47f6-9543-6ec106ee98ba" />
+> Llave Foranea (FK)
+
+## Operaciones
