@@ -3,6 +3,113 @@
 > * Representa con un diagrama relacional tu esquema del punto anterior.
 > * Encuentra cuatro operaciones que vayas a usar en tu base de datos y exprésalas mediante operadores del álgebra relacional. Explica con tus propias palabras cada una de las operaciones
 
+## Esquema relacional
+• Airport
+
+ID (Clave Primaria/Primary Key)
+
+Name
+
+Is_24h
+
+Opening_time
+
+Closing_time
+
+Contact
+
+• Aircraft_Model
+
+ID (Clave Primaria/Primary Key)
+
+Name
+
+• Aircraft
+
+ID (Clave Primaria/Primary Key)
+
+Registration
+
+Model (Clave Foranea/Foreign Key → Aircraft_Model.ID)
+
+Capacity
+
+• Crew
+
+ID (Clave Primaria/Primary Key)
+
+First_name
+
+Last_name
+
+Contact
+
+Position
+
+Flight_hours
+
+• Crew_Aircraft_Model
+
+ID (Clave Primaria/Primary Key)
+
+Crew (Clave Foranea/Foreign Key → Crew.ID)
+
+Model (Clave Foranea/Foreign Key → Aircraft_Model.ID)
+
+• Flight
+
+ID (Clave Primaria/Primary Key)
+
+ED_Date
+
+SD_Date
+
+AD_Date
+
+ED_Hour
+
+SD_Hour
+
+AD_Hour
+
+EA_Date
+
+SA_Date
+
+AA_Date
+
+EA_Hour
+
+SA_Hour
+
+AA_Hour
+
+Pax_count
+
+Status
+
+Departure (Clave Foranea/Foreign Key → Airport.ID)
+
+Arrival (Clave Foranea/Foreign Key → Airport.ID)
+
+Aircraft (Clave Foranea/Foreign Key → Aircraft.ID)
+
+• Flight_Crew
+
+ID (Clave Primaria/Primary Key)
+
+Crew (Clave Foranea/Foreign Key → Crew.ID)
+
+Flight (Clave Foranea/Foreign Key → Flight.ID)
+
+• Alternate
+
+ID (Clave Primaria/Primary Key)
+
+Departure (Clave Foranea/Foreign Key → Airport.ID)
+
+Arrival (Clave Foranea/Foreign Key → Airport.ID)
+
 ## Diagrama relacional
 ![imagen](https://github.com/user-attachments/assets/c9fbf596-ae03-4f68-8d72-4892b7d57bf8)
 > ### Nomenclatura
@@ -12,3 +119,34 @@
 > Llave Foranea (FK)
 
 ## Operaciones
+> Obtener los vuelos que fueron realizados usando aviones con una capacidad superior a 150 pasajeros.
+
+`π_flight.* (σ_aircraft.capacity > 150 (flight ⨝ flight.aircraft = aircraft.id))`
+
+* Se hace un `join` entre "flight" y "aircraft" usando la llave foránea "aircraft.id".
+* Se filtran solo los aviones con "capacity" > 150.
+* Se devuelven los atributos de los vuelos.
+---
+> Obtener los nombres de los aeropuertos que operan las 24 horas
+
+`π_name (σ_is_24h = true (airport))`
+
+* Se seleccionan únicamente las filas donde `is_24h = true`.
+* Se proyecta solamente el campo "name".
+---
+> Obtener todos los vuelos que ya han sido completados
+
+`π_* (σ_status = 'completed' (flight))`
+
+* Se aplica una selección para filtrar solo los vuelos con `status = 'completed'`.
+* Se proyectan todos los atributos del vuelo.
+---
+> Obtener la lista de vuelos y el nombre del modelo del avión usado en cada vuelo.
+
+`π_flight.id, aircraft_model.name (
+  flight ⨝ flight.aircraft = aircraft.id
+         ⨝ aircraft.model = aircraft_model.id
+)`
+
+* Se realiza un `join` de "flight" a "aircraft", y de "aircraft" a "aircraft_model".
+* Se proyecta el id del vuelo y el "name" del modelo del avión.
