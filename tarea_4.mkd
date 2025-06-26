@@ -1,0 +1,142 @@
+# Instrucciones 📚
+> * Crear la base de datos y tablas correspondientes a su base de datos
+> * Incluir al menos 5 registros en tu base de datos
+
+## Script de creación de la base de datos
+```sql
+CREATE TABLE Airport (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    is_24h BOOLEAN,
+    opening_time TIME,
+    closing_time TIME,
+    contact VARCHAR(100)
+);
+
+CREATE TABLE Aircraft_model (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100)
+);
+
+CREATE TABLE Aircraft (
+    id SERIAL PRIMARY KEY,
+    registration VARCHAR(50),
+    model INTEGER REFERENCES Aircraft_model(id),
+    capacity INTEGER
+);
+
+CREATE TABLE Crew (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    contact VARCHAR(100),
+    position VARCHAR(50),
+    flight_hours INTEGER
+);
+
+CREATE TABLE Flight (
+    id SERIAL PRIMARY KEY,
+    ed_date DATE,
+    sd_date DATE,
+    ad_date DATE,
+    ed_hour TIME,
+    sd_hour TIME,
+    ad_hour TIME,
+    ea_date DATE,
+    sa_date DATE,
+    aa_date DATE,
+    ea_hour TIME,
+    sa_hour TIME,
+    aa_hour TIME,
+    pax_count INTEGER,
+    status VARCHAR(50),
+    departure INTEGER REFERENCES Airport(id),
+    arrival INTEGER REFERENCES Airport(id),
+    aircraft INTEGER REFERENCES Aircraft(id)
+);
+
+-- (join table)
+CREATE TABLE Flight_crew (
+    id SERIAL PRIMARY KEY,
+    crew INTEGER REFERENCES Crew(id),
+    flight INTEGER REFERENCES Flight(id)
+);
+
+-- (join table)
+CREATE TABLE Crew_aircraft_model (
+    id SERIAL PRIMARY KEY,
+    crew INTEGER REFERENCES Crew(id),
+    model INTEGER REFERENCES Aircraft_model(id)
+);
+
+CREATE TABLE Alternate (
+    id SERIAL PRIMARY KEY,
+    arrival INTEGER REFERENCES Airport(id),
+    departure INTEGER REFERENCES Airport(id)
+);
+```
+
+## Registros a la base de datos
+```sql
+INSERT INTO Airport (name, is_24h, opening_time, closing_time, contact) 
+VALUES 
+('John F. Kennedy International Airport', TRUE, NULL, NULL, '+1 718-244-4444'),
+('Heathrow Airport', FALSE, '04:30:00', '23:30:00', '+44 844 335 1801'),
+('Charles de Gaulle Airport', FALSE, '05:00:00', '23:00:00', '+33 1 70 36 39 50');
+
+INSERT INTO Aircraft_model (name) 
+VALUES 
+('Boeing 737-800'),
+('Airbus A320'),
+('Boeing 787 Dreamliner'),
+('Embraer E190');
+
+INSERT INTO Aircraft (registration, model, capacity) 
+VALUES 
+('N12345', 1, 189),
+('F-ABCD', 2, 180),
+('G-XLEA', 3, 242),
+('PT-SEA', 4, 114);
+
+INSERT INTO Crew (first_name, last_name, contact, position, flight_hours) 
+VALUES 
+('John', 'Smith', 'john.smith@airline.com', 'Captain', 8500),
+('Sarah', 'Johnson', 'sarah.j@airline.com', 'First Officer', 3500),
+('Michael', 'Brown', 'm.brown@airline.com', 'Senior Flight Attendant', 12000),
+('Emily', 'Davis', 'emily.d@airline.com', 'Flight Attendant', 2500);
+
+INSERT INTO Flight (
+    ed_date, sd_date, ad_date, ed_hour, sd_hour, ad_hour,
+    ea_date, sa_date, aa_date, ea_hour, sa_hour, aa_hour,
+    pax_count, status, departure, arrival, aircraft
+) 
+VALUES 
+('2023-06-15', '2023-06-15', '2023-06-15', '08:00:00', '08:15:00', '10:30:00',
+ '2023-06-15', '2023-06-15', '2023-06-15', '11:00:00', '11:20:00', '13:45:00',
+ 175, 'Completed', 1, 2, 1),
+ 
+('2023-06-16', NULL, NULL, '14:30:00', NULL, NULL,
+ '2023-06-16', NULL, NULL, '17:00:00', NULL, NULL,
+ 0, 'Scheduled', 2, 1, 2);
+
+INSERT INTO Flight_crew (crew, flight) 
+VALUES 
+(1, 1),
+(2, 1),
+(3, 1),
+(4, 1),
+(1, 2),
+(2, 2);
+
+INSERT INTO Crew_aircraft_model (crew, model) 
+VALUES 
+(1, 1),
+(1, 2),
+(2, 1),
+(2, 2),
+(3, 1),
+(3, 2),
+(3, 3),
+(4, 1),
+(4, 2);
+```
