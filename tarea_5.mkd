@@ -1,0 +1,23 @@
+# Generación, importación y exportación de datos 📫
+
+Con el fin de poblar la base de datos de información, se realizó la generación de datos falsos haciendo uso de la herramienta de generación de datos de 
+[Mockaroo](https://mockaroo.com/).
+
+Se realizaron diferentes generaciones para cada tabla de la base de datos. El proceso resultó ser simple y bastante práctico al ser capaz de generar una 
+cantidad considerable de registros en unos pocos minutos, algo que hacer de manera manual hubiera tomado como mínimo un par de horas. 
+
+A continuación se describe con mayor detalle las dificultades y recomendaciones que se concluyeron después de utilizar dicha herramienta y haber hecho la importación de los datos
+generados a la base de datos.
+
+## Dificultades
+* Las relaciones entre tablas no se manejan de la mejor manera. Si bien es posible lograrlo, sobre todo en las relaciones `many-to-many` puede llegar a ser complejo si no se
+  realiza un seguimiento adecuado de los IDs de relación.
+* En mi caso particular, los campos de fecha y hora deben tener una coherencia (por ejemplo, la hora de llegada no puede ser menor que la de salida si ocurren en el mismo día);
+  esto es algo que Mockaroo no realiza *out of the box* y debe ser manejado manualmente con formulas.
+
+## Recomendaciones
+* Generar los registros tabla por tabla y sin ID, dejar que la base de datos se encargue de asignar uno en autómatico, principalmente para evitar colisiones con IDs que no existen
+  y llevar un mejor control.
+* Utilizar formulas para validar que los datos se generen de la forma requerida, toma algo de tiempo, pero es preferible perder unos minutos escribiendo las validaciones que horas
+  tratando de importar sin exito los datos.
+* Exportar los datos como `csv` es un formato universalmente utilizado y menos propenso a producir fallas al momento de importar los datos.
