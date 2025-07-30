@@ -1,0 +1,36 @@
+# Limpieza de la Base de Datos 🪥
+
+En esta sección se realizaría la limpieza de los datos generados por Mockaroo en la `tarea 5`, sin embrgo, en mi caso personal realice dicha
+limpieza al momento de generar los datos en la mencionada tarea, por lo que procedemos a pasar al siguiente punto.
+
+# Subconsultas 🪹
+
+### **Obtener los vuelos donde su aeronave tenga una capacidad dada (e.j. más de 200).**
+
+```sql
+SELECT *
+FROM Flight
+WHERE aircraft IN (
+    SELECT id
+    FROM Aircraft
+    WHERE capacity > 200
+);
+```
+---
+### **Mostrar los vuelos junto con la capacidad de su aeronave asignada**
+```sql
+SELECT f.id,
+       f.pax_count,
+       (SELECT capacity FROM Aircraft a WHERE a.id = f.aircraft) AS aircraft_capacity
+FROM Flight f;
+```
+---
+### **Mostrar todos los modelos de aeronave que algún miembro de la tripulación puede operar**
+```sql
+SELECT name
+FROM Aircraft_model
+WHERE id IN (
+    SELECT model
+    FROM Crew_aircraft_model
+);
+```
