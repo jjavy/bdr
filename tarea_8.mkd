@@ -1,0 +1,135 @@
+# VIEWS 🪟
+Se solicita una view por cada uno de las siguientes sentencias, `JOIN`, `LEFT JOIN`, `RIGHT JOIN` y una con una subconsulta; 
+a continuación se muestran dichos ejemplos haciendo uso de la base de datos con la que se ha trabajado previamente.
+
+## JOIN
+Esta vista muestra muestra los vuelos junto con el nombre del aeropuerto de salida y llegada.
+
+```sql
+CREATE VIEW flight_with_airports AS
+SELECT 
+    f.id AS flight_id,
+    f.status,
+    dep.name AS departure_airport,
+    arr.name AS arrival_airport,
+    f.sd_date,
+    f.sd_hour,
+    f.ed_date,
+    f.ed_hour
+FROM Flight f
+JOIN Airport dep ON f.departure = dep.id
+JOIN Airport arr ON f.arrival = arr.id;
+```
+
+## LEFT JOIN
+Esta view devuelve todos los vuelos, (incluso aquellos sin aeronave asignada) y agrega los datos del avión si es que existe.
+
+```sql
+CREATE VIEW flight_with_aircraft_info AS
+SELECT 
+    f.id AS flight_id,
+    f.status,
+    f.sd_date,
+    a.registration,
+    a.capacity,
+    am.name AS aircraft_model
+FROM Flight f
+LEFT JOIN Aircraft a ON f.aircraft = a.id
+LEFT JOIN Aircraft_model am ON a.model = am.id;
+```
+
+## RIGHT JOIN
+Esta view muestra todos los miembros de la tripulación y los vuelos en los que participaron. 
+También se listan vuelos que no tienen tripulación asignada.
+
+```sql
+CREATE VIEW flight_crew_assignments AS
+SELECT 
+    f.id AS flight_id,
+    f.status,
+    c.first_name,
+    c.last_name,
+    c.position
+FROM Flight_crew fc
+RIGHT JOIN Flight f ON fc.flight = f.id
+LEFT JOIN Crew c ON fc.crew = c.id;
+```
+
+## Subconsulta
+Esta vista muestra los vuelos junto con la cantidad de miembros de tripulación asignados a cada vuelo.
+
+```sql
+CREATE VIEW flight_with_crew_count AS
+SELECT 
+    f.id AS flight_id,
+    f.status,
+    f.sd_date,
+    f.sd_hour,
+    (
+        SELECT COUNT(*)
+        FROM Flight_crew fc
+        WHERE fc.flight = f.id
+    ) AS crew_count
+FROM Flight f;
+```
+
+# Triggers 🔫
+Realizamos un `trigger` que se ejecute cada vez que se cree un nuevo vuelo para asegurarnos que la cantidad de pasajeros
+(`pax_count`) no exceda la capacidad del avión que se asignó. Si lo excede mostramos un error.
+
+> Para fines de practicidad, creamos una función `FUNCTION` con la lógica necesaria.
+
+```sql
+CREATE OR REPLACE FUNCTION validate_passenger_capacity()
+RETURNS TRIGGER AS $$
+DECLARE
+    max_capacity INTEGER;
+BEGIN
+    -- Obtener la capacidad del avión asignado
+    SELECT capacity INTO max_capacity
+    FROM Aircraft
+    WHERE id = NEW.aircraft;
+
+    -- Verificar si el número de pasajeros excede la capacidad
+    IF NEW.pax_count > max_capacity THEN
+        RAISE EXCEPTION 'El número de pasajeros (% pax) excede la capacidad del avión (% capacidad)', NEW.pax_count, max_capacity;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+> A continuación, creamos el `TRIGGER`
+
+```sql
+CREATE TRIGGER check_passenger_capacity
+BEFORE INSERT OR UPDATE ON Flight
+FOR EACH ROW
+EXECUTE FUNCTION validate_passenger_capacity();
+```
+
+Realizamos un ejemplo para comprobar la correcta implementación
+
+```sql
+-- Para el ejemplo se utiliza una aeronave que tiene capacidad 150
+INSERT INTO Flight (
+    sd_date, ed_date, ad_date,
+    sd_hour, ed_hour, ad_hour,
+    sa_date, ea_date, aa_date,
+    sa_hour, ea_hour, aa_hour,
+    pax_count, status,
+    departure, arrival, aircraft
+)
+VALUES (
+    '2025-08-01', '2025-08-01', '2025-08-01',
+    '08:00', '08:45', '09:10',
+    '2025-08-01', '2025-08-01', '2025-08-01',
+    '07:45', '08:30', '09:05',
+    180, 'scheduled',
+    1, 2, 3
+);
+```
+
+Y para este ejemplo, salta el error que definimos en el primer paso,
+`'El número de pasajeros (180) excede la capacidad del avión (150)'`
