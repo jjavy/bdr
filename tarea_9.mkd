@@ -1,0 +1,84 @@
+# Funciones
+A continuación se presenta la implementación de dos procedimientos en SQL:
+* Correlación
+* Regresión lineal simple
+
+## Función de correlación
+Se calcula la correlación entre:
+
+`x = pax_count`
+
+`y = "duración estimada del vuelo en minutos" (ed_hour - sd_hour)`
+
+Siguiendo la siguiente formula
+
+<img width="309" height="82" alt="Captura de pantalla 2025-07-30 a la(s) 15 04 27" src="https://github.com/user-attachments/assets/81f80afe-0953-43a4-856f-c2381b192cb8" />
+
+Obtenemos en SQL la siguiente función,
+```sql
+SELECT
+  (n * sum_xy - sum_x * sum_y) /
+  (SQRT(n * sum_x2 - sum_x^2) * SQRT(n * sum_y2 - sum_y^2)) AS pearson_r
+FROM (
+  SELECT
+    COUNT(*) AS n,
+    SUM(pax_count) AS sum_x,
+    SUM(duration_minutes) AS sum_y,
+    SUM(pax_count * duration_minutes) AS sum_xy,
+    SUM(pax_count * pax_count) AS sum_x2,
+    SUM(duration_minutes * duration_minutes) AS sum_y2
+  FROM (
+    SELECT
+      pax_count,
+      EXTRACT(EPOCH FROM (ed_hour - sd_hour)) / 60 AS duration_minutes
+    FROM Flight
+    WHERE pax_count IS NOT NULL AND ed_hour IS NOT NULL AND sd_hour IS NOT NULL
+  ) AS base
+) AS stats;
+```
+
+> El ejemplo anterior se realizó con fines didacticos, es preciso mencionar la existencia de `corr(x, y)`, la cual ya realiza dicha acción y
+> cuya implementación se vería de la siguiente manera:
+> ```sql
+> SELECT
+>  corr(
+>    pax_count,
+>    EXTRACT(EPOCH FROM (ed_hour - sd_hour)) / 60
+>  ) AS correlacion_pearson
+> FROM Flight
+> WHERE ed_hour IS NOT NULL AND sd_hour IS NOT NULL AND pax_count IS NOT NULL;
+> ```
+
+## Regresión lineal simple
+El siguiente ejemplo pretende estimar la cantidad de pasajeros en función de la duración del vuelo en minutos.
+
+```sql
+WITH base AS (
+  SELECT
+    pax_count AS y,
+    EXTRACT(EPOCH FROM (ed_hour - sd_hour)) / 60 AS x
+  FROM Flight
+  WHERE pax_count IS NOT NULL
+    AND ed_hour IS NOT NULL
+    AND sd_hour IS NOT NULL
+),
+stats AS (
+  SELECT
+    COUNT(*) AS n,
+    SUM(x) AS sum_x,
+    SUM(y) AS sum_y,
+    SUM(x * y) AS sum_xy,
+    SUM(x * x) AS sum_x2
+  FROM base
+)
+SELECT
+  -- Calcula la pendiente (b) y la intersección (a)
+  (n * sum_xy - sum_x * sum_y) / (n * sum_x2 - sum_x^2) AS slope_b,
+  (sum_y - ((n * sum_xy - sum_x * sum_y) / (n * sum_x2 - sum_x^2)) * sum_x) / n AS intercept_a
+FROM stats;
+```
+
+Donde se utilizaron las siguientes formulas.
+
+<img width="309" height="125" alt="Captura de pantalla 2025-07-30 a la(s) 15 13 12" src="https://github.com/user-attachments/assets/c8ae2ba1-4bee-4935-96db-d095678526bc" />
+
