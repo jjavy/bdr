@@ -1,0 +1,53 @@
+# Consultas 🧾
+
+Ya que contamos con datos en la base de datos, procedemos a realizar algunas operaciones de consulta en la misma.
+
+## Conteo de frecuencias
+Frecuencia con la que aparece cada estado (`status`) en la tabla de vuelos.
+
+```sql
+SELECT status, COUNT(*) AS frecuencia
+FROM Flight
+GROUP BY status
+ORDER BY frecuencia DESC;
+```
+
+## Media
+El promedio de pasajeros (`pax_count`) por vuelo
+
+```sql
+SELECT AVG(pax_count) AS promedio_pasajeros
+FROM Flight;
+```
+
+## Mínimos y máximos
+Valor mínimo y máximo de capacidad (`capacity`) en las aeronaves
+
+```sql
+SELECT MIN(capacity) AS capacidad_minima,
+       MAX(capacity) AS capacidad_maxima
+FROM Aircraft;
+```
+
+## Cálculo de cuartiles
+Los cuartiles de la cantidad de pasajeros (`pax_count`) por vuelo
+
+> PostgreSQL tiene una ventaja, y es que ya cuenta con una función dedicada para este caso, `percentile_cont`,
+> lo que facilita bastante esta consulta.
+```sql
+SELECT
+  percentile_cont(ARRAY[0.25, 0.5, 0.75]) 
+    WITHIN GROUP (ORDER BY pax_count) AS cuartiles
+FROM Flight;
+```
+
+## Moda
+El rol (`position`) de vuelo más común del personal de vuelo
+
+```sql
+SELECT position
+FROM Crew
+GROUP BY position
+ORDER BY COUNT(*) DESC
+LIMIT 1;
+```
